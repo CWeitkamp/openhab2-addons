@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -12,8 +12,11 @@
  */
 package org.openhab.binding.basicprofiles.internal.config;
 
+import java.math.RoundingMode;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.basicprofiles.internal.profiles.RoundStateProfile;
 
 /**
  * Configuration for {@link RoundStateProfile}.
@@ -23,5 +26,5 @@ import org.eclipse.jdt.annotation.Nullable;
 @NonNullByDefault
 public class RoundStateProfileConfig {
     public @Nullable Integer scale;
-    public String mode = "HALF_UP";
+    public String mode = RoundingMode.HALF_UP.name();
 }

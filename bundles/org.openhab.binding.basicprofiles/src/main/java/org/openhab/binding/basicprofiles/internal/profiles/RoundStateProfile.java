@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -43,17 +43,16 @@ public class RoundStateProfile implements StateProfile {
     private final Logger logger = LoggerFactory.getLogger(RoundStateProfile.class);
 
     private final ProfileCallback callback;
-    private final RoundStateProfileConfig config;
 
     final int scale;
     final RoundingMode roundingMode;
 
     public RoundStateProfile(ProfileCallback callback, ProfileContext context) {
         this.callback = callback;
-        this.config = context.getConfiguration().as(RoundStateProfileConfig.class);
+        RoundStateProfileConfig config = context.getConfiguration().as(RoundStateProfileConfig.class);
         logger.debug("Configuring profile with parameters: [{scale='{}', mode='{}']", config.scale, config.mode);
 
-        int scale = 0;
+        int localScale = 0;
         // if (config.scale instanceof String) {
         // try {
         // scale = Integer.valueOf((String) config.scale);
@@ -62,20 +61,20 @@ public class RoundStateProfile implements StateProfile {
         // }
         // } else
         if (config.scale instanceof Number) {
-            scale = ((Number) config.scale).intValue();
+            localScale = ((Number) config.scale).intValue();
         } else {
             logger.error("Parameter 'scale' is not of type String or Number.");
         }
 
-        if (scale < 0) {
+        if (localScale < 0) {
             logger.warn("Parameter 'scale' has to be a non-negative integer. Ignoring it.");
-            scale = 0;
+            localScale = 0;
         }
 
-        RoundingMode roundingMode = RoundingMode.HALF_UP;
+        RoundingMode localRoundingMode = RoundingMode.HALF_UP;
         if (config.mode instanceof String) {
             try {
-                roundingMode = RoundingMode.valueOf(config.mode);
+                localRoundingMode = RoundingMode.valueOf(config.mode);
             } catch (IllegalArgumentException e) {
                 logger.warn("Parameter 'mode' is not a supported rounding mode: '{}'. Using default.", config.mode);
             }
@@ -83,8 +82,8 @@ public class RoundStateProfile implements StateProfile {
             logger.error("Parameter 'mode' is not of type String.");
         }
 
-        this.scale = scale;
-        this.roundingMode = roundingMode;
+        this.scale = localScale;
+        this.roundingMode = localRoundingMode;
     }
 
     @Override

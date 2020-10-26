@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -15,22 +15,21 @@ package org.openhab.binding.basicprofiles.internal.factory;
 import static org.openhab.binding.basicprofiles.internal.BasicProfilesConstants.BINDING_ID;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.basicprofiles.internal.profiles.BatteryLowStateProfile;
+import org.openhab.binding.basicprofiles.internal.profiles.InvertedStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.RoundStateProfile;
+import org.openhab.binding.basicprofiles.internal.profiles.ToggleSwitchTriggerProfile;
 import org.openhab.core.i18n.LocalizedKey;
 import org.openhab.core.library.CoreItemFactory;
 import org.openhab.core.thing.Channel;
-import org.openhab.core.thing.UID;
 import org.openhab.core.thing.profiles.Profile;
 import org.openhab.core.thing.profiles.ProfileAdvisor;
 import org.openhab.core.thing.profiles.ProfileCallback;
@@ -59,6 +58,7 @@ import org.osgi.service.component.annotations.Reference;
 public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider, ProfileAdvisor {
 
     public static final ProfileTypeUID BATTERY_LOW_UID = new ProfileTypeUID(BINDING_ID, "battery-low");
+    public static final ProfileTypeUID INVERTED_UID = new ProfileTypeUID(BINDING_ID, "inverted");
     public static final ProfileTypeUID ROUND_UID = new ProfileTypeUID(BINDING_ID, "round");
     public static final ProfileTypeUID MAP_TO_ON_TYPE_UID = new ProfileTypeUID(BINDING_ID, "map-to-on");
     public static final ProfileTypeUID GENERIC_COMMAND_PROFILE_TYPE_UID = new ProfileTypeUID(BINDING_ID,
@@ -72,6 +72,12 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             .newState(BATTERY_LOW_UID, "Battery Low") //
             .withSupportedItemTypesOfChannel(CoreItemFactory.DIMMER, CoreItemFactory.NUMBER) //
             .withSupportedItemTypes(CoreItemFactory.SWITCH) //
+            .build();
+    private static final ProfileType PROFILE_TYPE_INVERTED = ProfileTypeBuilder.newState(INVERTED_UID, "Invert")
+            .withSupportedItemTypes(CoreItemFactory.CONTACT, CoreItemFactory.DIMMER, CoreItemFactory.NUMBER,
+                    CoreItemFactory.PLAYER, CoreItemFactory.ROLLERSHUTTER, CoreItemFactory.SWITCH) //
+            .withSupportedItemTypesOfChannel(CoreItemFactory.CONTACT, CoreItemFactory.DIMMER, CoreItemFactory.NUMBER,
+                    CoreItemFactory.PLAYER, CoreItemFactory.ROLLERSHUTTER, CoreItemFactory.SWITCH) //
             .build();
     private static final ProfileType PROFILE_TYPE_ROUND = ProfileTypeBuilder.newState(ROUND_UID, "Round")
             .withSupportedItemTypes(CoreItemFactory.NUMBER) //
@@ -100,16 +106,14 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             .withSupportedItemTypes(CoreItemFactory.SWITCH) // .withSupportedChannelTypeUIDs(CHANNEL_TYPE_BUTTONEVENT)
             .build();
 
-    private static final Set<ProfileTypeUID> SUPPORTED_PROFILE_TYPE_UIDS = Collections
-            .unmodifiableSet(Stream.of(BATTERY_LOW_UID, ROUND_UID, MAP_TO_ON_TYPE_UID, GENERIC_COMMAND_PROFILE_TYPE_UID,
-                    TOGGLE_PLAYER_PROFILE_TYPE_UID, TOGGLE_ROLLERSHUTTER_PROFILE_TYPE_UID,
-                    TOGGLE_SWITCH_PROFILE_TYPE_UID).collect(Collectors.toSet()));
-    private static final Set<ProfileType> SUPPORTED_PROFILE_TYPES = Collections.unmodifiableSet(Stream
-            .of(PROFILE_TYPE_BATTERY_LOW, PROFILE_TYPE_ROUND, PROFILE_TYPE_MAP_TO_ON, GENERIC_COMMAND_PROFILE_TYPE,
-                    TOGGLE_PLAYER_TYPE, TOGGLE_ROLLERSHUTTER_TYPE, TOGGLE_SWITCH_TYPE)
-            .collect(Collectors.toSet()));
+    private static final Set<ProfileTypeUID> SUPPORTED_PROFILE_TYPE_UIDS = Set.of(BATTERY_LOW_UID, INVERTED_UID,
+            ROUND_UID, MAP_TO_ON_TYPE_UID, GENERIC_COMMAND_PROFILE_TYPE_UID, TOGGLE_PLAYER_PROFILE_TYPE_UID,
+            TOGGLE_ROLLERSHUTTER_PROFILE_TYPE_UID, TOGGLE_SWITCH_PROFILE_TYPE_UID);
+    private static final Set<ProfileType> SUPPORTED_PROFILE_TYPES = Set.of(PROFILE_TYPE_BATTERY_LOW,
+            PROFILE_TYPE_INVERTED, PROFILE_TYPE_ROUND, PROFILE_TYPE_MAP_TO_ON, GENERIC_COMMAND_PROFILE_TYPE,
+            TOGGLE_PLAYER_TYPE, TOGGLE_ROLLERSHUTTER_TYPE, TOGGLE_SWITCH_TYPE);
 
-    private final Map<LocalizedKey, @Nullable ProfileType> localizedProfileTypeCache = new ConcurrentHashMap<>();
+    private final Map<LocalizedKey, ProfileType> localizedProfileTypeCache = new ConcurrentHashMap<>();
 
     private final ProfileTypeI18nLocalizationService profileTypeI18nLocalizationService;
     private final Bundle bundle;
@@ -126,26 +130,28 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             ProfileContext context) {
         if (BATTERY_LOW_UID.equals(profileTypeUID)) {
             return new BatteryLowStateProfile(callback, context);
+        } else if (INVERTED_UID.equals(profileTypeUID)) {
+            return new InvertedStateProfile(callback);
         } else if (ROUND_UID.equals(profileTypeUID)) {
             return new RoundStateProfile(callback, context);
-        } // else if (MAP_TO_ON_TYPE_UID.equals(profileTypeUID)) {
-          // return new BasicMapToOnStateProfile(callback);
-          // } else if (GENERIC_COMMAND_PROFILE_TYPE_UID.equals(profileTypeUID)) {
-          // return new GenericCommandTriggerProfile(callback, context);
-          // } else if (TOGGLE_PLAYER_PROFILE_TYPE_UID.equals(profileTypeUID)) {
-          // return new TogglePlayerTriggerProfile(callback, context);
-          // } else if (TOGGLE_ROLLERSHUTTER_PROFILE_TYPE_UID.equals(profileTypeUID)) {
-          // return new ToggleRollershutterTriggerProfile(callback, context);
-          // } else if (TOGGLE_SWITCH_PROFILE_TYPE_UID.equals(profileTypeUID)) {
-          // return new ToggleSwitchTriggerProfile(callback, context);
-          // }
+            // else if (MAP_TO_ON_TYPE_UID.equals(profileTypeUID)) {
+            // return new BasicMapToOnStateProfile(callback);
+            // } else if (GENERIC_COMMAND_PROFILE_TYPE_UID.equals(profileTypeUID)) {
+            // return new GenericCommandTriggerProfile(callback, context);
+            // } else if (TOGGLE_PLAYER_PROFILE_TYPE_UID.equals(profileTypeUID)) {
+            // return new TogglePlayerTriggerProfile(callback, context);
+            // } else if (TOGGLE_ROLLERSHUTTER_PROFILE_TYPE_UID.equals(profileTypeUID)) {
+            // return new ToggleRollershutterTriggerProfile(callback, context);
+        } else if (TOGGLE_SWITCH_PROFILE_TYPE_UID.equals(profileTypeUID)) {
+            return new ToggleSwitchTriggerProfile(callback, context);
+        }
         return null;
     }
 
     @Override
     public Collection<ProfileType> getProfileTypes(@Nullable Locale locale) {
-        return Collections.unmodifiableList(SUPPORTED_PROFILE_TYPES.stream()
-                .map(p -> createLocalizedProfileType(p, locale)).collect(Collectors.toList()));
+        return SUPPORTED_PROFILE_TYPES.stream().map(p -> createLocalizedProfileType(p, locale))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -164,28 +170,22 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
     }
 
     private ProfileType createLocalizedProfileType(ProfileType profileType, @Nullable Locale locale) {
-        final LocalizedKey localizedKey = getLocalizedProfileTypeKey(profileType.getUID(), locale);
+        final LocalizedKey localizedKey = new LocalizedKey(profileType.getUID(),
+                locale != null ? locale.toLanguageTag() : null);
 
         final ProfileType cachedlocalizedProfileType = localizedProfileTypeCache.get(localizedKey);
         if (cachedlocalizedProfileType != null) {
             return cachedlocalizedProfileType;
         }
 
-        final ProfileType localizedProfileType = localize(profileType, locale);
+        final ProfileType localizedProfileType = profileTypeI18nLocalizationService.createLocalizedProfileType(bundle,
+                profileType, locale);
         if (localizedProfileType != null) {
             localizedProfileTypeCache.put(localizedKey, localizedProfileType);
             return localizedProfileType;
         } else {
             return profileType;
         }
-    }
-
-    private @Nullable ProfileType localize(ProfileType profileType, @Nullable Locale locale) {
-        return profileTypeI18nLocalizationService.createLocalizedProfileType(bundle, profileType, locale);
-    }
-
-    private LocalizedKey getLocalizedProfileTypeKey(UID uid, @Nullable Locale locale) {
-        return new LocalizedKey(uid, locale != null ? locale.toLanguageTag() : null);
     }
 
     private @Nullable ProfileTypeUID getSuggestedProfileTypeUID(@Nullable ChannelTypeUID channelTypeUID,
