@@ -33,6 +33,17 @@
 		</parameter>
 	</config-description>
 
+	<config-description uri="profile:basic-profiles:to-percent">
+		<parameter name="min" type="text" required="true">
+			<label>Min Value</label>
+			<description>Maps to 0% if value is equal to or less than this value (plain number or number with unit).</description>
+		</parameter>
+		<parameter name="max" type="text" required="true">
+			<label>Max Value</label>
+			<description>Maps to 100% if value is equal to or greater than this value (plain number or number with unit).</description>
+		</parameter>
+	</config-description>
+
 	<config-description uri="profile:basic-profiles:toggle-player">
 		<parameter name="events" type="text" required="true" multiple="true">
 			<label>Events</label>

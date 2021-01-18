@@ -15,15 +15,17 @@ package org.openhab.binding.basicprofiles.internal.factory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Collection;
 import java.util.Map;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.openhab.core.config.core.Configuration;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.thing.profiles.ProfileCallback;
@@ -38,15 +40,15 @@ import org.openhab.core.util.BundleResolver;
  *
  * @author Christoph Weitkamp - Initial contribution
  */
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class BasicProfileFactoryTest {
 
-    private static final int NUMBER_OF_PROFILES = 8;
+    private static final int NUMBER_OF_PROFILES = 9;
 
     private static final Map<String, Object> PROPERTIES = Map.of("threshold", 15, "scale", 2, "events", "1002,1003",
-            "command", OnOffType.ON.toString());
+            "command", OnOffType.ON.toString(), "min", 0, "max", 100);
     private static final Configuration CONFIG = new Configuration(PROPERTIES);
-
-    private AutoCloseable mocksCloseable;
 
     private BasicProfileFactory profileFactory;
     private @Mock ProfileTypeI18nLocalizationService mockLocalizationService;
@@ -56,16 +58,9 @@ public class BasicProfileFactoryTest {
 
     @BeforeEach
     public void setup() {
-        mocksCloseable = openMocks(this);
-
         profileFactory = new BasicProfileFactory(mockLocalizationService, mockBundleResolver);
 
         when(mockContext.getConfiguration()).thenReturn(CONFIG);
-    }
-
-    @AfterEach
-    public void afterEach() throws Exception {
-        mocksCloseable.close();
     }
 
     @Test
