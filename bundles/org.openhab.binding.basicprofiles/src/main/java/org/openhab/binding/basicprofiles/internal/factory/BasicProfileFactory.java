@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.basicprofiles.internal.profiles.BatteryLowStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.InvertedStateProfile;
+import org.openhab.binding.basicprofiles.internal.profiles.RangeStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.RoundStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.ToPercentStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.ToggleSwitchTriggerProfile;
@@ -62,6 +63,7 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
     public static final ProfileTypeUID INVERTED_UID = new ProfileTypeUID(BINDING_ID, "inverted");
     public static final ProfileTypeUID ROUND_UID = new ProfileTypeUID(BINDING_ID, "round");
     public static final ProfileTypeUID MAP_TO_ON_TYPE_UID = new ProfileTypeUID(BINDING_ID, "map-to-on");
+    public static final ProfileTypeUID RANGE = new ProfileTypeUID(BINDING_ID, "range");
     public static final ProfileTypeUID TO_PERCENT_TYPE_UID = new ProfileTypeUID(BINDING_ID, "to-percent");
     public static final ProfileTypeUID GENERIC_COMMAND_PROFILE_TYPE_UID = new ProfileTypeUID(BINDING_ID,
             "generic-command");
@@ -90,6 +92,10 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             .withSupportedItemTypesOfChannel(CoreItemFactory.CONTACT) //
             .withSupportedItemTypes(CoreItemFactory.SWITCH) //
             .build();
+    private static final ProfileType RANGE_TYPE = ProfileTypeBuilder.newState(RANGE, "Range") //
+            .withSupportedItemTypesOfChannel(CoreItemFactory.DIMMER, CoreItemFactory.NUMBER) //
+            .withSupportedItemTypes(CoreItemFactory.SWITCH) //
+            .build();
     private static final ProfileType PROFILE_TYPE_TO_PERCENT = ProfileTypeBuilder
             .newState(TO_PERCENT_TYPE_UID, "To Percent") //
             .withSupportedItemTypesOfChannel(CoreItemFactory.DIMMER, CoreItemFactory.NUMBER,
@@ -115,10 +121,10 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             .build();
 
     private static final Set<ProfileTypeUID> SUPPORTED_PROFILE_TYPE_UIDS = Set.of(BATTERY_LOW_UID, INVERTED_UID,
-            ROUND_UID, MAP_TO_ON_TYPE_UID, TO_PERCENT_TYPE_UID, GENERIC_COMMAND_PROFILE_TYPE_UID,
+            ROUND_UID, MAP_TO_ON_TYPE_UID, RANGE, TO_PERCENT_TYPE_UID, GENERIC_COMMAND_PROFILE_TYPE_UID,
             TOGGLE_PLAYER_PROFILE_TYPE_UID, TOGGLE_ROLLERSHUTTER_PROFILE_TYPE_UID, TOGGLE_SWITCH_PROFILE_TYPE_UID);
     private static final Set<ProfileType> SUPPORTED_PROFILE_TYPES = Set.of(PROFILE_TYPE_BATTERY_LOW,
-            PROFILE_TYPE_INVERTED, PROFILE_TYPE_ROUND, PROFILE_TYPE_MAP_TO_ON, PROFILE_TYPE_TO_PERCENT,
+            PROFILE_TYPE_INVERTED, PROFILE_TYPE_ROUND, PROFILE_TYPE_MAP_TO_ON, RANGE_TYPE, PROFILE_TYPE_TO_PERCENT,
             GENERIC_COMMAND_PROFILE_TYPE, TOGGLE_PLAYER_TYPE, TOGGLE_ROLLERSHUTTER_TYPE, TOGGLE_SWITCH_TYPE);
 
     private final Map<LocalizedKey, ProfileType> localizedProfileTypeCache = new ConcurrentHashMap<>();
@@ -144,6 +150,8 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             return new RoundStateProfile(callback, context);
             // else if (MAP_TO_ON_TYPE_UID.equals(profileTypeUID)) {
             // return new BasicMapToOnStateProfile(callback);
+        } else if (RANGE.equals(profileTypeUID)) {
+            return new RangeStateProfile(callback, context);
         } else if (TO_PERCENT_TYPE_UID.equals(profileTypeUID)) {
             return new ToPercentStateProfile(callback, context);
             // } else if (GENERIC_COMMAND_PROFILE_TYPE_UID.equals(profileTypeUID)) {
