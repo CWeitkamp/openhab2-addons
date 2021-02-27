@@ -43,7 +43,7 @@ import org.openhab.core.types.UnDefType;
  *
  * @author Christoph Weitkamp - Initial contribution
  */
-public class InvertedStateProfileTest {
+public class InvertStateProfileTest {
 
     private static final DateTimeType NOW = new DateTimeType();
 
@@ -108,7 +108,7 @@ public class InvertedStateProfileTest {
     }
 
     private StateProfile initProfile() {
-        return new InvertedStateProfile(mockCallback);
+        return new InvertStateProfile(mockCallback);
     }
 
     private void verifyCommandFromItem(StateProfile profile, Command command, Command result) {

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.basicprofiles.internal.profiles.BatteryLowStateProfile;
-import org.openhab.binding.basicprofiles.internal.profiles.InvertedStateProfile;
+import org.openhab.binding.basicprofiles.internal.profiles.InvertStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.RangeStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.RoundStateProfile;
 import org.openhab.binding.basicprofiles.internal.profiles.ToPercentStateProfile;
@@ -60,7 +60,7 @@ import org.osgi.service.component.annotations.Reference;
 public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider, ProfileAdvisor {
 
     public static final ProfileTypeUID BATTERY_LOW_UID = new ProfileTypeUID(BINDING_ID, "battery-low");
-    public static final ProfileTypeUID INVERTED_UID = new ProfileTypeUID(BINDING_ID, "inverted");
+    public static final ProfileTypeUID INVERT_UID = new ProfileTypeUID(BINDING_ID, "invert");
     public static final ProfileTypeUID ROUND_UID = new ProfileTypeUID(BINDING_ID, "round");
     public static final ProfileTypeUID MAP_TO_ON_TYPE_UID = new ProfileTypeUID(BINDING_ID, "map-to-on");
     public static final ProfileTypeUID RANGE = new ProfileTypeUID(BINDING_ID, "range");
@@ -77,7 +77,7 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             .withSupportedItemTypesOfChannel(CoreItemFactory.DIMMER, CoreItemFactory.NUMBER) //
             .withSupportedItemTypes(CoreItemFactory.SWITCH) //
             .build();
-    private static final ProfileType PROFILE_TYPE_INVERTED = ProfileTypeBuilder.newState(INVERTED_UID, "Invert")
+    private static final ProfileType PROFILE_TYPE_INVERT = ProfileTypeBuilder.newState(INVERT_UID, "Invert")
             .withSupportedItemTypes(CoreItemFactory.CONTACT, CoreItemFactory.DIMMER, CoreItemFactory.NUMBER,
                     CoreItemFactory.PLAYER, CoreItemFactory.ROLLERSHUTTER, CoreItemFactory.SWITCH) //
             .withSupportedItemTypesOfChannel(CoreItemFactory.CONTACT, CoreItemFactory.DIMMER, CoreItemFactory.NUMBER,
@@ -120,11 +120,11 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             .withSupportedItemTypes(CoreItemFactory.SWITCH) // .withSupportedChannelTypeUIDs(CHANNEL_TYPE_BUTTONEVENT)
             .build();
 
-    private static final Set<ProfileTypeUID> SUPPORTED_PROFILE_TYPE_UIDS = Set.of(BATTERY_LOW_UID, INVERTED_UID,
+    private static final Set<ProfileTypeUID> SUPPORTED_PROFILE_TYPE_UIDS = Set.of(BATTERY_LOW_UID, INVERT_UID,
             ROUND_UID, MAP_TO_ON_TYPE_UID, RANGE, TO_PERCENT_TYPE_UID, GENERIC_COMMAND_PROFILE_TYPE_UID,
             TOGGLE_PLAYER_PROFILE_TYPE_UID, TOGGLE_ROLLERSHUTTER_PROFILE_TYPE_UID, TOGGLE_SWITCH_PROFILE_TYPE_UID);
     private static final Set<ProfileType> SUPPORTED_PROFILE_TYPES = Set.of(PROFILE_TYPE_BATTERY_LOW,
-            PROFILE_TYPE_INVERTED, PROFILE_TYPE_ROUND, PROFILE_TYPE_MAP_TO_ON, RANGE_TYPE, PROFILE_TYPE_TO_PERCENT,
+            PROFILE_TYPE_INVERT, PROFILE_TYPE_ROUND, PROFILE_TYPE_MAP_TO_ON, RANGE_TYPE, PROFILE_TYPE_TO_PERCENT,
             GENERIC_COMMAND_PROFILE_TYPE, TOGGLE_PLAYER_TYPE, TOGGLE_ROLLERSHUTTER_TYPE, TOGGLE_SWITCH_TYPE);
 
     private final Map<LocalizedKey, ProfileType> localizedProfileTypeCache = new ConcurrentHashMap<>();
@@ -144,8 +144,8 @@ public class BasicProfileFactory implements ProfileFactory, ProfileTypeProvider,
             ProfileContext context) {
         if (BATTERY_LOW_UID.equals(profileTypeUID)) {
             return new BatteryLowStateProfile(callback, context);
-        } else if (INVERTED_UID.equals(profileTypeUID)) {
-            return new InvertedStateProfile(callback);
+        } else if (INVERT_UID.equals(profileTypeUID)) {
+            return new InvertStateProfile(callback);
         } else if (ROUND_UID.equals(profileTypeUID)) {
             return new RoundStateProfile(callback, context);
             // else if (MAP_TO_ON_TYPE_UID.equals(profileTypeUID)) {

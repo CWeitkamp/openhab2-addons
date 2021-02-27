@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.basicprofiles.internal.profiles;
 
-import static org.openhab.binding.basicprofiles.internal.factory.BasicProfileFactory.INVERTED_UID;
+import static org.openhab.binding.basicprofiles.internal.factory.BasicProfileFactory.INVERT_UID;
 
 import java.math.RoundingMode;
 
@@ -45,19 +45,19 @@ import org.slf4j.LoggerFactory;
  * @author Christoph Weitkamp - Initial contribution
  */
 @NonNullByDefault
-public class InvertedStateProfile implements StateProfile {
+public class InvertStateProfile implements StateProfile {
 
-    private final Logger logger = LoggerFactory.getLogger(InvertedStateProfile.class);
+    private final Logger logger = LoggerFactory.getLogger(InvertStateProfile.class);
 
     private final ProfileCallback callback;
 
-    public InvertedStateProfile(ProfileCallback callback) {
+    public InvertStateProfile(ProfileCallback callback) {
         this.callback = callback;
     }
 
     @Override
     public ProfileTypeUID getProfileTypeUID() {
-        return INVERTED_UID;
+        return INVERT_UID;
     }
 
     @Override
