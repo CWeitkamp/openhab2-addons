@@ -16,7 +16,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.openhab.binding.basicprofiles.internal.profiles.RangeStateProfile;
 import org.openhab.core.config.core.Configuration;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.thing.profiles.ProfileCallback;
@@ -46,11 +44,10 @@ import org.openhab.core.util.BundleResolver;
 @MockitoSettings(strictness = Strictness.WARN)
 public class BasicProfileFactoryTest {
 
-    private static final int NUMBER_OF_PROFILES = 10;
+    private static final int NUMBER_OF_PROFILES = 9;
 
     private static final Map<String, Object> PROPERTIES = Map.of("threshold", 15, "scale", 2, "events", "1002,1003",
-            "command", OnOffType.ON.toString(), "min", 0, "max", 100, RangeStateProfile.LOWER_PARAM, BigDecimal.TEN,
-            RangeStateProfile.UPPER_PARAM, BigDecimal.valueOf(40));
+            "command", OnOffType.ON.toString(), "min", 0, "max", 100);
     private static final Configuration CONFIG = new Configuration(PROPERTIES);
 
     private BasicProfileFactory profileFactory;
