@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.basicprofiles.internal.profiles;
 
-import static org.openhab.binding.basicprofiles.internal.factory.BasicProfileFactory.ROUND_UID;
+import static org.openhab.binding.basicprofiles.internal.factory.BasicProfilesFactory.ROUND_UID;
 
 import java.math.RoundingMode;
 

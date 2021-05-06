@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.basicprofiles.internal.profiles;
 
-import static org.openhab.binding.basicprofiles.internal.factory.BasicProfileFactory.TOGGLE_SWITCH_PROFILE_TYPE_UID;
+import static org.openhab.binding.basicprofiles.internal.factory.BasicProfilesFactory.TOGGLE_SWITCH_PROFILE_TYPE_UID;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;

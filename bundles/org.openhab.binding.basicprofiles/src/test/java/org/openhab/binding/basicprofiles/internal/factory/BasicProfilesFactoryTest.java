@@ -28,7 +28,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.openhab.core.config.core.Configuration;
 import org.openhab.core.library.types.OnOffType;
-import org.openhab.core.thing.profiles.ProfileCallback;
 import org.openhab.core.thing.profiles.ProfileContext;
 import org.openhab.core.thing.profiles.ProfileType;
 import org.openhab.core.thing.profiles.ProfileTypeUID;
@@ -36,29 +35,29 @@ import org.openhab.core.thing.profiles.i18n.ProfileTypeI18nLocalizationService;
 import org.openhab.core.util.BundleResolver;
 
 /**
- * Basic unit tests for {@link BasicProfileFactory}.
+ * Basic unit tests for {@link BasicProfilesFactory}.
  *
  * @author Christoph Weitkamp - Initial contribution
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.WARN)
-public class BasicProfileFactoryTest {
+public class BasicProfilesFactoryTest {
 
-    private static final int NUMBER_OF_PROFILES = 9;
+    private static final int NUMBER_OF_PROFILES = 10;
 
-    private static final Map<String, Object> PROPERTIES = Map.of("threshold", 15, "scale", 2, "events", "1002,1003",
-            "command", OnOffType.ON.toString(), "min", 0, "max", 100);
+    private static final Map<String, Object> PROPERTIES = Map.of("offset", "30", "threshold", 15, "scale", 2, "events",
+            "1002,1003", "command", OnOffType.ON.toString(), "min", 0, "max", 100);
     private static final Configuration CONFIG = new Configuration(PROPERTIES);
 
-    private BasicProfileFactory profileFactory;
+    private BasicProfilesFactory profileFactory;
     private @Mock ProfileTypeI18nLocalizationService mockLocalizationService;
     private @Mock BundleResolver mockBundleResolver;
-    private @Mock ProfileCallback mockCallback;
+    // private @Mock ProfileCallback mockCallback;
     private @Mock ProfileContext mockContext;
 
     @BeforeEach
     public void setup() {
-        profileFactory = new BasicProfileFactory(mockLocalizationService, mockBundleResolver);
+        profileFactory = new BasicProfilesFactory(mockLocalizationService, mockBundleResolver);
 
         when(mockContext.getConfiguration()).thenReturn(CONFIG);
     }

@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.basicprofiles.internal.profiles;
 
-import static org.openhab.binding.basicprofiles.internal.factory.BasicProfileFactory.BATTERY_LOW_UID;
+import static org.openhab.binding.basicprofiles.internal.factory.BasicProfilesFactory.BATTERY_LOW_UID;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.binding.basicprofiles.internal.config.BatteryLowStateProfileConfig;

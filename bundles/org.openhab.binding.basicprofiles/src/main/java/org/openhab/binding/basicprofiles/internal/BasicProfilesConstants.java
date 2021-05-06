@@ -22,5 +22,5 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 @NonNullByDefault
 public class BasicProfilesConstants {
 
-    public static final String BINDING_ID = "basic-profiles";
+    public static final String SCOPE = "basic-profiles";
 }

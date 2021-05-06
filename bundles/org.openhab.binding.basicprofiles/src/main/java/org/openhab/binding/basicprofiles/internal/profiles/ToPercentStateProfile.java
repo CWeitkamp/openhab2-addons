@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.basicprofiles.internal.profiles;
 
-import static org.openhab.binding.basicprofiles.internal.factory.BasicProfileFactory.TO_PERCENT_TYPE_UID;
+import static org.openhab.binding.basicprofiles.internal.factory.BasicProfilesFactory.TO_PERCENT_TYPE_UID;
 
 import java.math.BigDecimal;
 

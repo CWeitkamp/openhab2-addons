@@ -12,6 +12,7 @@
  */
 package org.openhab.binding.basicprofiles.internal.profiles;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.junit.jupiter.api.Test;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.PercentType;
@@ -22,7 +23,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Christoph Weitkamp - Initial contribution
  */
-class ToPercentStateProfileTest {
+@NonNullByDefault
+public class ToPercentStateProfileTest {
 
     Logger logger = LoggerFactory.getLogger(ToPercentStateProfileTest.class);
 
